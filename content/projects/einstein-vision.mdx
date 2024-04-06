@@ -1,0 +1,20 @@
+---
+title: Einstein Vision
+description: Implement various computer vision techniques to detect and analyze the environment around a moving car
+date: "2023-05-01"
+published: false
+repository: swoosh1337/Einstein-Vision/blob/main/EinsteinVision.pdf
+  
+---
+
+
+
+## Networks Utilized
+
+The project utilizes the following networks:
+
+1. Object Detection (cars, traffic signs, traffic lights, speed limit sign): A TensorFlow-based object detection model from [xiaogangLi/tensorflow-MobilenetV1-SSD](https://github.com/xiaogangLi/tensorflow-MobilenetV1-SSD) is used to detect objects in the scene. The midpoints of the bounding boxes are used to identify the position of cars, traffic signs, and traffic lights. Instance/panoptic segmentation network is planned to be used for better depth estimation in future iterations.
+
+2. Depth Estimation: A transformer-based midas model from [jankais3r/Video-Depthify](https://github.com/jankais3r/Video-Depthify) is used to estimate the depth of the objects in the scene. The average depth is calculated within the region defined by the bounding boxes from object detection. Instance segmentation is planned to be used for better results in future iterations.
+
+3. Lane Detection: YOLO Pv2 from [CAIC-AD/YOLOPv2](https://github.com/CAIC-AD/YOLOPv2) is used to detect lanes in the scene.
