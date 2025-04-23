@@ -1,7 +1,7 @@
 // src/services/appfigures.ts
 
 // Use the Netlify function proxy endpoint as the base URL
-const BASE_URL = '/.netlify/functions/appfigures-proxy';
+const BASE_URL = '/api/appfigures-proxy';
 
 // Credentials are now handled by the proxy function, no longer needed here
 // const PAT = import.meta.env.VITE_APPFIGURES_PAT;

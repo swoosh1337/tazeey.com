@@ -5,6 +5,7 @@ const Navbar = () => {
     <nav className="flex justify-between items-center p-4 border-b border-gray-200">
       <div className="flex items-center">
         <Link to="/" className="text-black no-underline mr-2">「irakli grigolia」</Link>
+        <img src="public/images/neko_line.gif" alt="" width="500" height="500" />
       </div>
       <div className="flex items-center">
         <Link to="/about" className="text-gray-600 no-underline mx-4 p-1 rounded hover:bg-gray-100">about</Link>
