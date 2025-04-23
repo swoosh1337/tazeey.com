@@ -56,7 +56,8 @@ const handleProxyError = async (response: Response): Promise<never> => {
  * Fetches the list of products (apps) associated with the account via the proxy.
  */
 export const getProducts = async (): Promise<Record<string, AppfiguresProduct>> => {
-  const url = `${BASE_URL}/products/mine`; // Path appended to proxy base
+  // You must specify a store when listing "mine" products, e.g. apple, google_play, amazon_appstore
+  const url = `${BASE_URL}/products/mine?store=apple`;
   try {
     console.debug('Fetching products from:', url);
     const response = await fetch(url); // No headers needed here now
