@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('/fonts/SpaceGrotesk-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+:root {
+  --background-color: #FAF9F6;
+  --text-color: #2e2d2b;
+  --beta-badge-color: #FFE599;
+  --button-color: #a4ccf4;
+  --button-hover-color: #8bb8e8;
+  --footer-text-color: #b0b5b9;
+  --nav-link-color: rgba(38, 52, 74, 0.7);
+  --border-color: rgba(0, 0, 0, 0.1);
+}
+
+#root {
+  @apply flex flex-col min-h-screen;
+}
+
+.content-container {
+  @apply flex flex-col flex-1;
+}
+
+.navbar {
+  @apply flex justify-between items-center p-4 border-b border-opacity-10;
+}
+
+.navbar-logo-container {
+  @apply flex items-center;
+}
+
+.navbar-logo {
+  @apply text-current no-underline mr-2;
+}
+
+.beta-badge {
+  @apply bg-beta-badge-color text-current py-1 px-2 rounded text-xs ml-2;
+}
+
+.navbar-links {
+  @apply flex items-center;
+}
+
+.navbar-link {
+  @apply text-nav-link-color no-underline mx-4 p-1 rounded transition-colors duration-150 ease-out;
+}
+
+.navbar-link:hover {
+  @apply bg-gray-100;
+}
+
+.navbar-separator {
+  @apply text-gray-500;
+}
+
+.footer {
+  @apply flex justify-between items-center w-full p-2 text-xs text-footer-text-color border-t border-opacity-10;
+}
+
+.footer a {
+  @apply text-gray-600 no-underline mr-5 border-b border-transparent transition-colors duration-150 ease-out;
+}
+
+.footer a:hover {
+  @apply border-gray-600;
+}
+
+.page-content {
+  @apply max-w-3xl mx-auto p-8 flex-1;
+}
+
+/* Home page specific styles */
+.doko-logo {
+  @apply text-center mb-8;
+}
+
+.doko-logo h1 {
+  @apply text-5xl mb-2;
+}
+
+.tagline {
+  @apply text-lg text-current opacity-80;
+}
+
+.form-container {
+  @apply w-full max-w-md mx-auto my-8;
+}
+
+input[type="email"] {
+  @apply w-full p-3 border border-opacity-10 rounded font-sans mb-4;
+}
+
+button[type="submit"] {
+  @apply w-full p-3 bg-button-color text-white border-none rounded font-sans cursor-pointer transition-colors duration-200;
+}
+
+button[type="submit"]:hover {
+  @apply bg-button-hover-color;
+}
+
+/* About page specific styles */
+.about-content {
+  @apply max-w-xl mx-auto;
+}
+
+.about-content h1 {
+  @apply text-5xl text-center mb-8;
+}
+
+.about-content p {
+  @apply text-lg leading-relaxed mb-8;
+}
+
+/* Blog page specific styles */
+.blog-date {
+  @apply text-gray-500 text-sm mb-2;
+}
+
+.blog-title {
+  @apply text-3xl mb-8;
+}
+
+.blog-content p {
+  @apply mb-6 leading-relaxed;
+}
+
+.blog-content ul {
+  @apply mb-6 pl-6;
+}
+
+.blog-content li {
+  @apply mb-2;
+}
+
+.blog-content strong {
+  @apply font-bold;
+}
