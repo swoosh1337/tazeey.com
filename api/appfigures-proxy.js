@@ -1,10 +1,15 @@
-export default async function handler(req, res) { ... }const APPFIGURES_API_BASE = 'https://api.appfigures.com/v2';
+const APPFIGURES_API_BASE = 'https://api.appfigures.com/v2';
 // Vercel accesses env vars directly with process.env
 const PAT = process.env.APPFIGURES_PAT;
 
 export default async function handler(req, res) {
+  // Determine base URL for URL parsing (use VERCEL_URL in production)
+  const BASE_URL = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : `http://${req.headers.host}`;
+
   // Extract path and query from the request URL
-  const url = new URL(req.url, `http://${req.headers.host}`);
+  const url = new URL(req.url, BASE_URL);
   const apiPath = url.pathname.replace(/^\/api\/appfigures-proxy/, '');
   const queryString = url.search;
   const targetUrl = `${APPFIGURES_API_BASE}${apiPath}${queryString}`;
@@ -23,6 +28,8 @@ export default async function handler(req, res) {
     console.error('Appfigures PAT missing');
     return res.status(500).json({ error: 'Appfigures PAT environment variable not set.' });
   }
+
+  console.debug('Appfigures PAT is', PAT ? 'set' : 'missing');
 
   try {
     let body = undefined;
