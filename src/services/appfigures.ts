@@ -58,7 +58,9 @@ const handleProxyError = async (response: Response): Promise<never> => {
 export const getProducts = async (): Promise<Record<string, AppfiguresProduct>> => {
   const url = `${BASE_URL}/products/mine`; // Path appended to proxy base
   try {
+    console.debug('Fetching products from:', url);
     const response = await fetch(url); // No headers needed here now
+    console.debug('Response from getProducts:', response);
     if (!response.ok) {
       // Use the helper to throw a detailed error
       await handleProxyError(response);
