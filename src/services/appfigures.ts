@@ -55,24 +55,22 @@ const handleProxyError = async (response: Response): Promise<never> => {
 /**
  * Fetches the list of products (apps) associated with the account via the proxy.
  */
-export const getProducts = async (): Promise<Record<string, AppfiguresProduct>> => {
-  // You must specify a store when listing "mine" products, e.g. apple, google_play, amazon_appstore
-  const url = `${BASE_URL}/products/mine?store=apple`;
+// Fetches the list of products (apps) and their stats from the new endpoint
+export const getProducts = async (): Promise<any> => {
+  const url = 'https://appfigures-script.onrender.com/appfigures-data';
   try {
     console.debug('Fetching products from:', url);
-    const response = await fetch(url); // No headers needed here now
-    console.debug('Response from getProducts:', response);
+    const response = await fetch(url);
     if (!response.ok) {
-      // Use the helper to throw a detailed error
-      await handleProxyError(response);
+      throw new Error(`Failed to fetch products: ${response.status}`);
     }
-    // Only parse JSON if response.ok is true
     return await response.json();
   } catch (error) {
     console.error('Error in getProducts:', error);
-    throw error; // Re-throw the original or the enhanced error from handleProxyError
+    throw error;
   }
 };
+
 
 /**
  * Fetches **all-time** sales report data (downloads) for specific products.

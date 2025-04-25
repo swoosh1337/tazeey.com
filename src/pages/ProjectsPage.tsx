@@ -32,33 +32,25 @@ const ProjectsPage = () => {
       setLoading(true);
       setError(null);
       try {
-        // 1. Fetch all products
+        // Fetch all products and stats from the new endpoint
         const fetchedProductsObject = await getProducts();
-        const productList = Object.values(fetchedProductsObject);
-        const productIds = productList.map(p => p.id);
-
-        // 2. Fetch all stats in parallel
-        const [allSales, allUsage, allRatings] = await Promise.all([
-          getAllTimeSales(productIds),
-          getAllTimeUsage(productIds),
-          getRatings(productIds),
-        ]);
-
-        // 3. Combine data and filter
-        const combinedProducts = productList
-          .map((product) => ({
-            ...product,
-            // Combine all stats
-            stats: {
-              ...(allSales[product.id.toString()] || {}),
-              ...(allUsage[product.id.toString()] || {}),
-            },
-            rating: allRatings[product.id.toString()] || null,
-          }))
-          .filter(product => product.name !== 'SSENTIF');
-
-        setMobileApps(combinedProducts);
-
+        // The new endpoint returns a flat object keyed by product id, each containing product, sales, usage, ratings, etc.
+        const productList = Object.values(fetchedProductsObject)
+          .map((entry: any) => {
+            // Find the first 'product' property (some entries may have multiple)
+            const product = entry.product || entry;
+            // Merge stats from sales, usage, and ratings if present
+            const stats = {
+              ...(entry.sales || {}),
+              ...(entry.usage || {}),
+            };
+            return {
+              ...product,
+              stats,
+              rating: entry.ratings || null,
+            };
+          });
+        setMobileApps(productList);
       } catch (err) {
         console.error('Failed to fetch project data:', err);
         setError(
@@ -124,8 +116,10 @@ const ProjectsPage = () => {
                             <p>App Store Views: {formatNumber(product.stats?.app_store_views)} </p>
                             <p>Impressions: {formatNumber(product.stats?.impressions)} </p>
                             <p>
-                              Rating: {product.rating ? `${product.rating.stars.toFixed(1)} ★` : 'N/A'}
-                              {product.rating && ` (${formatNumber(product.rating.count)} reviews)`}
+                              Rating: {typeof product.rating?.stars === 'number' ? `${product.rating.stars.toFixed(1)} ★` : 'N/A'}
+                              {typeof product.rating?.count === 'number' && typeof product.rating?.stars === 'number'
+                                ? ` (${formatNumber(product.rating.count)} reviews)`
+                                : ''}
                             </p>
                           </div>
                         </div>
