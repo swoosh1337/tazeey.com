@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
+import TechStackPage from './pages/Teckstack';
 import BlogPage from './pages/BlogPage';
 import ContactPage from './pages/ContactPage';
 import ProjectsPage from './pages/ProjectsPage';
@@ -18,10 +18,10 @@ function App() {
         }
       />
       <Route
-        path="/about"
+        path="/techstack"
         element={
           <MainLayout>
-            <AboutPage />
+            <TechStackPage />
           </MainLayout>
         }
       />

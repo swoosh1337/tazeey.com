@@ -7,7 +7,7 @@ const Navbar = () => {
         <Link to="/" className="text-black no-underline mr-2">「irakli grigolia」</Link>
       </div>
       <div className="flex items-center">
-        <Link to="/about" className="text-gray-600 no-underline mx-4 p-1 rounded hover:bg-gray-100">about</Link>
+        <Link to="/techstack" className="text-gray-600 no-underline mx-4 p-1 rounded hover:bg-gray-100">techstack</Link>
         <span className="text-gray-400">{"//"}</span>
         <Link to="/projects" className="text-gray-600 no-underline mx-4 p-1 rounded hover:bg-gray-100">projects</Link>
         <span className="text-gray-400">{"//"}</span>
