@@ -88,11 +88,13 @@ const ProjectsPage = () => {
             <h2 className="text-3xl font-medium mb-6 border-b pb-2 border-gray-200">Mobile Apps</h2>
             {mobileApps.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {mobileApps.map((product) => {
-                  const appUrl = appStoreUrls[product.name]; // Get URL from map
-                  return (
-                    // Wrap card in an anchor tag if URL exists
-                    <a
+                {mobileApps
+                  .filter((product) => product.name !== 'SSENTIF')
+                  .map((product) => {
+                    const appUrl = appStoreUrls[product.name]; // Get URL from map
+                    return (
+                      // Wrap card in an anchor tag if URL exists
+                      <a
                       key={product.id} // Key moved to the anchor tag
                       href={appUrl || '#'} // Use URL or fallback to #
                       target={appUrl ? "_blank" : undefined} // Only open in new tab if URL exists
@@ -115,12 +117,6 @@ const ProjectsPage = () => {
                             <p>Downloads: {formatNumber(product.stats?.downloads)} </p>
                             <p>App Store Views: {formatNumber(product.stats?.app_store_views)} </p>
                             <p>Impressions: {formatNumber(product.stats?.impressions)} </p>
-                            <p>
-                              Rating: {typeof product.rating?.stars === 'number' ? `${product.rating.stars.toFixed(1)} ★` : 'N/A'}
-                              {typeof product.rating?.count === 'number' && typeof product.rating?.stars === 'number'
-                                ? ` (${formatNumber(product.rating.count)} reviews)`
-                                : ''}
-                            </p>
                           </div>
                         </div>
                       </div>
