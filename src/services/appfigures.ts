@@ -56,7 +56,49 @@ const handleProxyError = async (response: Response): Promise<never> => {
  * Fetches the list of products (apps) associated with the account via the proxy.
  */
 // Fetches the list of products (apps) and their stats from the new endpoint
+// Cache duration in milliseconds (1 hour)
+const CACHE_DURATION = 60 * 60 * 1000;
+
+// Get data from cache if it exists and is not expired
+const getFromCache = <T>(key: string): T | null => {
+  try {
+    const cachedData = localStorage.getItem(key);
+    if (!cachedData) return null;
+    
+    const { data, timestamp } = JSON.parse(cachedData);
+    const isExpired = Date.now() - timestamp > CACHE_DURATION;
+    
+    return isExpired ? null : data;
+  } catch (error) {
+    console.warn('Error reading from cache:', error);
+    return null;
+  }
+};
+
+// Save data to cache with current timestamp
+const saveToCache = <T>(key: string, data: T): void => {
+  try {
+    const cacheItem = {
+      data,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(key, JSON.stringify(cacheItem));
+  } catch (error) {
+    console.warn('Error saving to cache:', error);
+  }
+};
+
 export const getProducts = async (): Promise<any> => {
+  const CACHE_KEY = 'appfigures_products';
+  
+  // Try to get from cache first
+  const cachedData = getFromCache<any>(CACHE_KEY);
+  if (cachedData) {
+    console.debug('Using cached products data');
+    return cachedData;
+  }
+  
+  // If not in cache or expired, fetch from API
   const url = 'https://appfigures-script.onrender.com/appfigures-data';
   try {
     console.debug('Fetching products from:', url);
@@ -64,7 +106,12 @@ export const getProducts = async (): Promise<any> => {
     if (!response.ok) {
       throw new Error(`Failed to fetch products: ${response.status}`);
     }
-    return await response.json();
+    const data = await response.json();
+    
+    // Save to cache
+    saveToCache(CACHE_KEY, data);
+    
+    return data;
   } catch (error) {
     console.error('Error in getProducts:', error);
     throw error;

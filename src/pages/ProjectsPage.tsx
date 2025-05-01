@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import {
   getProducts,
   getAllTimeSales,
@@ -15,12 +15,139 @@ interface ProductWithStats extends AppfiguresProduct {
   rating?: AppfiguresRating | null;
 }
 
+// Interface for web app projects
+interface WebApp {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  imageUrl: string;
+}
+
 // Mapping from app name to App Store URL
 const appStoreUrls: Record<string, string> = {
   StraySync: 'https://apps.apple.com/us/app/straysync/id6742747753',
   Decaff: 'https://apps.apple.com/us/app/decaff/id6739958581',
   Meditrace: 'https://apps.apple.com/us/app/meditrace/id6737521772',
 };
+
+// Web app projects data
+const webApps: WebApp[] = [
+  {
+    id: 'rootsgarden',
+    name: 'Roots',
+    description: 'A habit tracking app',
+    url: 'https://www.rootsgarden.space',
+    imageUrl: 'https://placehold.co/400x400/e9f5db/1a472a?text=Roots+Garden',
+  },
+];
+
+// Loading placeholder component
+const LoadingPlaceholder = () => (
+  <div className="animate-pulse">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {[1, 2].map((item) => (
+        <div key={item} className="bg-white rounded-xl border border-gray-200 p-5 h-full flex items-start space-x-4">
+          <div className="w-14 h-14 bg-gray-200 rounded-xl flex-shrink-0"></div>
+          <div className="flex-grow">
+            <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+            <div className="space-y-1.5">
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Lazy load the mobile apps section to improve initial load time
+const MobileAppsSection = lazy(() => Promise.resolve({
+  default: ({ mobileApps, formatNumber }: { mobileApps: ProductWithStats[], formatNumber: (num?: number) => string }) => (
+    <section>
+      <h2 className="text-3xl font-medium mb-6 border-b pb-2 border-gray-200">Mobile Apps</h2>
+      {mobileApps.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {mobileApps
+            .filter((product) => product.name !== 'SSENTIF')
+            .map((product) => {
+              const appUrl = appStoreUrls[product.name]; // Get URL from map
+              return (
+                // Wrap card in an anchor tag if URL exists
+                <a
+                  key={product.id} // Key moved to the anchor tag
+                  href={appUrl || '#'} // Use URL or fallback to #
+                  target={appUrl ? "_blank" : undefined} // Only open in new tab if URL exists
+                  rel={appUrl ? "noopener noreferrer" : undefined}
+                  className={`block ${appUrl ? 'cursor-pointer' : 'cursor-default'}`}
+                >
+                  <div
+                    className="bg-white rounded-xl border border-gray-200 p-5 transition-shadow hover:shadow-lg h-full flex items-start space-x-4"
+                  >
+                    <img
+                      src={product.icon}
+                      alt={`${product.name} icon`}
+                      className="w-14 h-14 rounded-xl flex-shrink-0 mt-1"
+                      loading="lazy"
+                    />
+                    <div className="flex-grow">
+                      <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                      <div className="text-sm text-gray-700 space-y-1.5">
+                        <p>Downloads: {formatNumber(product.stats?.downloads)} </p>
+                        <p>App Store Views: {formatNumber(product.stats?.app_store_views)} </p>
+                        <p>Impressions: {formatNumber(product.stats?.impressions)} </p>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+        </div>
+      ) : (
+        <p className="text-gray-500">No mobile app data found.</p>
+      )}
+    </section>
+  )
+}));
+
+// Web apps section component
+const WebAppsSection = () => (
+  <section>
+    <h2 className="text-3xl font-medium mb-6 border-b pb-2 border-gray-200">Web Apps</h2>
+    {webApps.length > 0 ? (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {webApps.map((app) => (
+          <a
+            key={app.id}
+            href={app.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block cursor-pointer"
+          >
+            <div className="bg-white rounded-xl border border-gray-200 p-5 transition-shadow hover:shadow-lg h-full flex items-start space-x-4">
+              <img
+                src={app.imageUrl}
+                alt={`${app.name} preview`}
+                className="w-14 h-14 rounded-xl flex-shrink-0 mt-1"
+                loading="lazy"
+              />
+              <div className="flex-grow">
+                <h3 className="text-xl font-semibold mb-2">{app.name}</h3>
+                <div className="text-sm text-gray-700">
+                  <p>{app.description}</p>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p className="text-gray-500">No web apps to display yet.</p>
+    )}
+  </section>
+);
 
 const ProjectsPage = () => {
   const [mobileApps, setMobileApps] = useState<ProductWithStats[]>([]);
@@ -76,66 +203,26 @@ const ProjectsPage = () => {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-4xl font-semibold mb-8">Projects</h1>
 
-      {loading && <p className="text-center text-gray-500">Loading project data...</p>}
       {error && (
         <p className="text-center text-red-500">Error loading data: {error}</p>
       )}
 
-      {!loading && !error && (
-        <div className="space-y-12">
-          {/* Mobile Apps Section */}
-          <section>
-            <h2 className="text-3xl font-medium mb-6 border-b pb-2 border-gray-200">Mobile Apps</h2>
-            {mobileApps.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {mobileApps
-                  .filter((product) => product.name !== 'SSENTIF')
-                  .map((product) => {
-                    const appUrl = appStoreUrls[product.name]; // Get URL from map
-                    return (
-                      // Wrap card in an anchor tag if URL exists
-                      <a
-                      key={product.id} // Key moved to the anchor tag
-                      href={appUrl || '#'} // Use URL or fallback to #
-                      target={appUrl ? "_blank" : undefined} // Only open in new tab if URL exists
-                      rel={appUrl ? "noopener noreferrer" : undefined}
-                      className={`block ${appUrl ? 'cursor-pointer' : 'cursor-default'}`}
-                    >
-                      <div
-                        // Removed key from here
-                        className="bg-white rounded-xl border border-gray-200 p-5 transition-shadow hover:shadow-lg h-full flex items-start space-x-4"
-                         // Added h-full for consistent height, increased hover shadow
-                      >
-                        <img
-                          src={product.icon}
-                          alt={`${product.name} icon`}
-                          className="w-14 h-14 rounded-xl flex-shrink-0 mt-1"
-                        />
-                        <div className="flex-grow">
-                          <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                          <div className="text-sm text-gray-700 space-y-1.5">
-                            <p>Downloads: {formatNumber(product.stats?.downloads)} </p>
-                            <p>App Store Views: {formatNumber(product.stats?.app_store_views)} </p>
-                            <p>Impressions: {formatNumber(product.stats?.impressions)} </p>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-             ) : (
-                <p className="text-gray-500">No mobile app data found.</p>
-            )}
-          </section>
+      <div className="space-y-12">
+        {/* Mobile Apps Section with Suspense */}
+        <Suspense fallback={<>
+          <h2 className="text-3xl font-medium mb-6 border-b pb-2 border-gray-200">Mobile Apps</h2>
+          <LoadingPlaceholder />
+        </>}>
+          {loading ? (
+            <LoadingPlaceholder />
+          ) : (
+            <MobileAppsSection mobileApps={mobileApps} formatNumber={formatNumber} />
+          )}
+        </Suspense>
 
-          {/* Web Apps Section */}
-          <section>
-            <h2 className="text-3xl font-medium mb-6 border-b pb-2 border-gray-200">Web Apps</h2>
-            <p className="text-gray-500">No web apps to display yet.</p>
-          </section>
-        </div>
-      )}
+        {/* Web Apps Section */}
+        <WebAppsSection />
+      </div>
     </div>
   );
 };
