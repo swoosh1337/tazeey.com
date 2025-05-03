@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { Analytics } from '@vercel/analytics/react';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         {children}
       </main>
       <Footer />
+      <Analytics />
     </div>
   );
 };
