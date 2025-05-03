@@ -1,5 +1,15 @@
 {
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
+  ],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "installCommand": "npm install --no-optional --legacy-peer-deps",
+        "buildCommand": "npm run build"
+      }
+    }
   ]
 }
