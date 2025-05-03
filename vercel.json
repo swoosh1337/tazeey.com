@@ -5,11 +5,12 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/node",
+      "use": "@vercel/static-build",
       "config": {
         "installCommand": "npm install --no-optional --legacy-peer-deps",
         "buildCommand": "npm run build"
       }
     }
-  ]
+  ],
+  "outputDirectory": "dist"
 }
