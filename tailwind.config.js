@@ -60,14 +60,16 @@ module.exports = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        'background-color': '#fbfbfb',
-        'text-color': '#2e2d2b',
-        'beta-badge-color': '#FFE599',
-        'button-color': '#a4ccf4',
-        'button-hover-color': '#8bb8e8',
-        'footer-text-color': '#b0b5b9',
-        'nav-link-color': 'rgba(38, 52, 74, 0.7)',
-        'border-color': 'rgba(0, 0, 0, 0.1)',
+        // Color tokens mapped to CSS variables
+        'background-color': 'var(--background-color)',
+        'text-color': 'var(--text-color)',
+        'beta-badge-color': 'var(--beta-badge-color)',
+        'button-color': 'var(--button-color)',
+        'button-hover-color': 'var(--button-hover-color)',
+        'footer-text-color': 'var(--footer-text-color)',
+        'nav-link-color': 'var(--nav-link-color)',
+        'border-color': 'var(--border-color)',
+
       },
       keyframes: {
         "accordion-down": {

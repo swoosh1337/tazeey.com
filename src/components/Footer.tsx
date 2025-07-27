@@ -2,11 +2,9 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="flex justify-between items-center w-full p-2 text-xs text-gray-400 border-t border-gray-200">
-      <div>Irakli © {new Date().getFullYear()}</div>
-      <div>
-        <Link to="/contact" className="text-gray-600 no-underline hover:underline">contact</Link>
-      </div>
+    <footer className="py-4 text-center text-text-color dark:text-text-color border-t border-gray-200 dark:border-gray-700">
+      <div>Irakli {new Date().getFullYear()}</div>
+
     </footer>
   );
 };
