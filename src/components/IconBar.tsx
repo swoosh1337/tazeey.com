@@ -48,10 +48,15 @@ const apps: App[] = [
 
 const IconBar = () => {
   const [hoveredApp, setHoveredApp] = useState<string | null>(null);
+  const [groupHovered, setGroupHovered] = useState(false);
 
   return (
-    <div className="flex items-center space-x-0 mt-6 justify-center group">
-      <span className="font-medium mr-2 transition-all duration-300 group-hover:mr-4 text-text-color dark:text-text-color">My apps</span>
+    <div
+      className="flex items-center space-x-0 mt-6 justify-center group"
+      onMouseEnter={() => setGroupHovered(true)}
+      onMouseLeave={() => setGroupHovered(false)}
+    >
+      <span className="font-medium mr-2 transition-all duration-300 group-hover:mr-6 text-text-color dark:text-text-color">My apps</span>
       {apps.map((app, index) => (
         <a
           key={index}
@@ -65,7 +70,9 @@ const IconBar = () => {
           onMouseLeave={() => setHoveredApp(null)}
         >
           {/* App icon */}
-          <div className="w-8 h-8 rounded-lg bg-gray-200 flex items-center justify-center text-xs font-bold transition-all duration-300 transform scale-75 -mr-4 group-hover:scale-100 group-hover:mr-0 overflow-hidden dark:bg-gray-700 text-text-color dark:text-text-color">
+          <div
+            className="w-10 h-10 rounded-2xl bg-gray-200 flex items-center justify-center text-xs font-bold transition-all duration-300 -mr-5 group-hover:mr-2 overflow-hidden dark:bg-gray-700 text-text-color dark:text-text-color"
+            style={{ transform: `rotate(${groupHovered ? 0 : index * 6 - 9}deg) scale(${groupHovered ? 1 : 0.75})` }}>
             {app.icon ? (
               <img src={app.icon} alt={`${app.name} icon`} className="w-full h-full object-cover" />
             ) : (
